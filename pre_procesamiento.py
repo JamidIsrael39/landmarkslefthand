@@ -20,14 +20,14 @@ def cambio_tam(imagen):
    Salidas:
        m --> Imagen ya con el valor de 256 y valor proporcional
    """
-   filas,columnas=imagen.shape#Se opbtienen las dimensiones de la imagen
-   if filas<columnas:#Si las columnas son mayores que las filas
-      m=imutils.resize(imagen, height=256)#filas son 256 y las columnas a un valor proporcional
-   elif columnas==filas:#Caso especial donde la imagen es cuadrada
-         m=imutils.resize(imagen, width=256,height=256)#Las dimensiones se pasan a 256x256
+   filas,columnas = imagen.shape #Se opbtienen las dimensiones de la imagen
+   if filas < columnas: #Si las columnas son mayores que las filas
+      m = imutils.resize(imagen, height=256) #filas son 256 y las columnas a un valor proporcional
+   elif columnas == filas: #Caso especial donde la imagen es cuadrada
+         m = imutils.resize(imagen, width = 256, height = 256) #Las dimensiones se pasan a 256x256
    else: #Si las filas son mayores que las columnas
-      m=imutils.resize(imagen, width=256)#columna son 256 y filas a un valor proporcional
-   return m#Se regresa la imagen con las dimensiones mencionadas
+      m = imutils.resize(imagen, width = 256) #columna son 256 y filas a un valor proporcional
+   return m #Se regresa la imagen con las dimensiones mencionadas
 
 def mascara_circular(filas, columnas, centro=None, radio=None):
     """Función para aplicar una máscara circular sobre una imagen.
@@ -45,20 +45,20 @@ def mascara_circular(filas, columnas, centro=None, radio=None):
         mascara --> Máscara sobre la imagen
     """
     
-    if centro is None:#Se toma la mitad de la imagen
-        centro = [int(columnas/2), int(filas/2)]#El centro se toma de acuerdo a los valores dados
+    if centro is None: #Se toma la mitad de la imagen
+        centro = [int(columnas / 2), int(filas / 2)] #El centro se toma de acuerdo a los valores dados
     if radio is None: #Se usa la distancia a las filas y columnas para el radio, si no se especifica
-        radio = min(centro[0], centro[1], columnas-centro[0], filas-centro[1])#Se toma el radio que se especifica
+        radio = min(centro[0], centro[1], columnas-centro[0], filas-centro[1]) #Se toma el radio que se especifica
     Y, X = np.ogrid[:filas, :columnas] #Crea una matriz del tamaño especificado
-    dist_from_center = np.sqrt((X - centro[0])**2 + (Y-centro[1])**2)#Se calcula la distancia al centro
+    dist_from_center = np.sqrt((X - centro[0])**2 + (Y-centro[1])**2) #Se calcula la distancia al centro
     #Se convierte a binaria la imagen
-    mask = dist_from_center <= radio#Toma los valores que estan dentro del radio
-    mascara = np.zeros((filas,columnas))#Crea una matriz del tamaño de las filas y columnas
-    mascara[mask==False] = 0#Si los valores en la variable mask son False, se asigna a todos ellos el valor de 0
-    mascara[mask==True] = 1#Si los valores en la variable mask son True, se asigna a todos ellos el valor de 1
-    return mascara.astype('uint8')#Se regresa la variable mascara con valores uin8
+    mask = dist_from_center <= radio #Toma los valores que estan dentro del radio
+    mascara = np.zeros((filas,columnas)) #Crea una matriz del tamaño de las filas y columnas
+    mascara[mask==False] = 0 #Si los valores en la variable mask son False, se asigna a todos ellos el valor de 0
+    mascara[mask==True] = 1 #Si los valores en la variable mask son True, se asigna a todos ellos el valor de 1
+    return mascara.astype('uint8') #Se regresa la variable mascara con valores uin8
 
-def centroide(imagen,grafica):
+def centroide(imagen, grafica):
       """Localiza el centroide de una imagen y devuelve las coordenadas.
       Entradas:
       imagen --> Imagen a evaluar
@@ -75,14 +75,14 @@ def centroide(imagen,grafica):
       else: #Si m00 == 0 las dos coordenadas son 0
            cx, cy = 0, 0
       if grafica == 1: #Condición para graficar el centroide con bordes
-         plt.plot(cx,cy,'ro')
-         plt.imshow(imagen,cmap="gray")
+         plt.plot(cx, cy, 'ro')
+         plt.imshow(imagen, cmap = "gray")
          plt.show()
       elif grafica == 2: #Condición para graficar el centroide con la imagen de entrada
-         plt.plot(cx,cy,'ro')
-         plt.imshow(imagen,cmap="gray")
+         plt.plot(cx, cy, 'ro')
+         plt.imshow(imagen, cmap = "gray")
          plt.show()
-      return cx,cy#Se regresa el baricentro
+      return cx, cy #Se regresa el baricentro
   
 def parche(imagen, cy, cx, lado):
     """Se extraera un cuadrado de ladoxlado de la imagen, centrado en cx,cy.
@@ -98,10 +98,10 @@ def parche(imagen, cy, cx, lado):
     Salidas:
         parche --> Segmento de la imagen original
     """
-    parche = imagen[cx - lado // 2 : cx + lado // 2, cy - lado // 2 : cy + lado // 2]#Obtención del parche
-    return parche#Se regresa el segmento de la imagen
+    parche = imagen[cx - lado // 2 : cx + lado // 2, cy - lado // 2 : cy + lado // 2] #Obtención del parche
+    return parche #Se regresa el segmento de la imagen
 
-def correccion_contraste_pormuestra(imagen,imagen_muestra,sigma=1.5,grafica = 1):
+def correccion_contraste_pormuestra(imagen, imagen_muestra, sigma = 1.5, grafica = 1):
         """Función para corregir el contraste a partir de un segmento de la imagen
         Esta funcion ayuda a extraer los valores de la dispercion de los valores de gris 
         de un cuadro de la imagen, que estara centrado en (cx, cy), de tamaño lado x lado 
@@ -118,24 +118,24 @@ def correccion_contraste_pormuestra(imagen,imagen_muestra,sigma=1.5,grafica = 1)
         import numpy as np
         import matplotlib.pyplot as plt
         
-        f2=imagen_muestra#Segmento de la imagen
-        if grafica == 1:#En caso de que se muestre la gráfica
-           plt.title('Parche')#Título de la imagen
-           plt.imshow(f2,cmap='gray')#Se muestra la imagen
+        f2 = imagen_muestra #Segmento de la imagen
+        if grafica == 1: #En caso de que se muestre la gráfica
+           plt.title('Parche') #Título de la imagen
+           plt.imshow(f2,cmap='gray') #Se muestra la imagen
            plt.show()
         # convertir cada imagen en vector
-        x, y = f2.shape#Se obtienen las dimensiones de la imagen
-        f2=f2.reshape(x*y,1)#Se pasa a vector la imagen
-        fm=np.mean(f2)#Promedio de las imágenes:
-        DesvStd=np.std(f2, axis=0)#Desviación estándar del vector
+        x, y = f2.shape #Se obtienen las dimensiones de la imagen
+        f2 = f2.reshape(x * y, 1) #Se pasa a vector la imagen
+        fm = np.mean(f2) #Promedio de las imágenes:
+        DesvStd = np.std(f2, axis = 0) #Desviación estándar del vector
         #Nuevos valores: mínimo y máximo:
-        minA=fm-(DesvStd*sigma)#Valor mínimo
-        maxA=fm+(DesvStd*sigma)#Valor máximo
+        minA = fm - (DesvStd * sigma) #Valor mínimo
+        maxA = fm + (DesvStd * sigma) #Valor máximo
         #(fórmula de la pendiente):
-        NF=255*(imagen-minA)/((maxA-minA)+2.2250738585072014e-308)
-        NF = np.clip(NF,0,255)#Si los valores son cercanos a 0, se asigna a ese valor, si son cercanos a 255 se asignan a ese valor
+        NF=255 * (imagen - minA) / ((maxA - minA) + 2.2250738585072014e-308)
+        NF = np.clip(NF, 0, 255) #Si los valores son cercanos a 0, se asigna a ese valor, si son cercanos a 255 se asignan a ese valor
         #Esto es para evitar la saturación en la imagen
-        return NF.astype(np.uint8)#Se regresa la imagen en enteros de 8 bits sin signo
+        return NF.astype(np.uint8) #Se regresa la imagen en enteros de 8 bits sin signo
 
 def baricentro_correccion_contraste(imagen):
    """Función para obtener el baricentro dentro de la mano.
@@ -146,38 +146,38 @@ def baricentro_correccion_contraste(imagen):
    cy --> coordenada y de la imagen
    edges --> bordes de la imagen de la mano
    """
-   radio_inicial =100 #Se inicia el radio con 100 pixeles
-   filas,columnas=imagen.shape #Obtiene el valor de las dimensiones de la imagen
-   edges = cv2.Canny(imagen,5,20) #Primera obtención de los bordes con valores umbrales mínimo de 5 y máximo de 20 
-   cx,cy = centroide(edges,0)#Se localiza por primera vez el centroide
-   parche_=parche(imagen,cx,cy,60)#Se toma una ventana de tamaño 60x60 pixeles a partir del baricentro
-   correcion_cont = correccion_contraste_pormuestra(imagen,parche_,1.5,0)#Corrección de contraste con 1.5sigma
-   edges = cv2.Canny(correcion_cont,70,100) #Segunda obtención de los bordes con valores umbrales mínimo de 70 y máximo de 100 
-   cx,cy = centroide(edges,0) #Segunda localización del centroide
-   centroide_anterior = np.array([cx,cy])#Variable para ir guardando el centroide previo
-   condicion=True#Condición 
+   radio_inicial = 100 #Se inicia el radio con 100 pixeles
+   filas,columnas = imagen.shape #Obtiene el valor de las dimensiones de la imagen
+   edges = cv2.Canny(imagen, 5, 20) #Primera obtención de los bordes con valores umbrales mínimo de 5 y máximo de 20 
+   cx,cy = centroide(edges, 0) #Se localiza por primera vez el centroide
+   parche_=parche(imagen, cx, cy, 60) #Se toma una ventana de tamaño 60x60 pixeles a partir del baricentro
+   correcion_cont = correccion_contraste_pormuestra(imagen, parche_, 1.5, 0) #Corrección de contraste con 1.5sigma
+   edges = cv2.Canny(correcion_cont, 70, 100) #Segunda obtención de los bordes con valores umbrales mínimo de 70 y máximo de 100 
+   cx,cy = centroide(edges, 0) #Segunda localización del centroide
+   centroide_anterior = np.array([cx,cy]) #Variable para ir guardando el centroide previo
+   condicion = True #Condición 
    cond2 = True #Condición
    
    #Inicio ciclo while
-   while condicion == True or cond2 == True:#Se tienen dos condiocnes para el ciclo while
-      mascara = mascara_circular(filas,columnas,centro=[cx,cy],radio=radio_inicial) #Se aplica la función de mascara_circular
-      zona = (mascara*edges) #multiplica la mascara y la imagen para obtener la zona de interes
-      cx,cy = centroide(zona,0) #Obtención del centroide
-      centroide_actual=np.array([cx,cy])#Se guarda el centroide calculado
-      distancia =  distance.euclidean(centroide_anterior, centroide_actual)#Calculo de la distancia euclideana del centroide anterior con el actual
-      centroide_anterior = centroide_actual#Se asigna el centroide actual como anterior para continuar la búsqueda
+   while condicion == True or cond2 == True: #Se tienen dos condiocnes para el ciclo while
+      mascara = mascara_circular(filas, columnas, centro = [cx, cy], radio = radio_inicial) #Se aplica la función de mascara_circular
+      zona = (mascara * edges) #multiplica la mascara y la imagen para obtener la zona de interes
+      cx,cy = centroide(zona, 0) #Obtención del centroide
+      centroide_actual = np.array([cx, cy]) #Se guarda el centroide calculado
+      distancia = distance.euclidean(centroide_anterior, centroide_actual) #Calculo de la distancia euclideana del centroide anterior con el actual
+      centroide_anterior = centroide_actual #Se asigna el centroide actual como anterior para continuar la búsqueda
       radio_inicial = radio_inicial - 10 #Va disminuyendo de 10 en 10 el radio
       #Condiciones para continuar o salir del bucle
-      if distancia > 1:#Si la distancia del centroide aanterior y actual es mayor que 1
-         cond2=False #cond2 es falso
-      if distancia <= 1:#Si la distancia es menor o igual que 1
-         condicion=False#condicion es falso
-      else:#De otro modo
-         condicion = True#Se continua en el bucle
-      if radio_inicial<=30:#Si el radio inicial es menor o igual a 30
-         condicion=False#condicion es falso
-         cond2=False#cond2 es falso y se sale del bucle
-   return cx,cy,edges#la función regresa las coordenadas del baricentro y los bordes de la imagen
+      if distancia > 1: #Si la distancia del centroide aanterior y actual es mayor que 1
+         cond2 = False #cond2 es falso
+      if distancia <= 1: #Si la distancia es menor o igual que 1
+         condicion = False #condicion es falso
+      else: #De otro modo
+         condicion = True #Se continua en el bucle
+      if radio_inicial <= 30: #Si el radio inicial es menor o igual a 30
+         condicion = False #condicion es falso
+         cond2 = False #cond2 es falso y se sale del bucle
+   return cx,cy,edges #la función regresa las coordenadas del baricentro y los bordes de la imagen
 
 def circunferencia_densidad(imagen,bordes, cx, cy,grafica):
    """Obtiene una circunferencia del tamaño de la mano.
@@ -192,51 +192,54 @@ def circunferencia_densidad(imagen,bordes, cx, cy,grafica):
    radio_final --> Radio de la circunferencia final
    """
 
-   vector_suma_circulo = np.zeros((1,18)) #vector para almacenar la suma de los bordes de cada circulo
-   vector_resta_circulos = np.zeros((1,17)) #vector para almacenar la resta del circulo contenido
-   vector_areas=np.zeros((1,18)) #vector que almacena las áreas de los círculos
-   vector_areas_resta = np.zeros((1,17)) #vector para almacenar la resta de los círculos
-   vector_densidades = np.zeros((1,17)) #vector para las densidades
-   vector_Densidades = np.zeros((1,18))#vector para las densidades con el primer circulo
-   cradio=1.32#Constante para multiplicar el radio del circulo
-   radios = np.array([30,cradio*30,(cradio**2)*30,(cradio**3)*30,(cradio**4)*30,(cradio**5)*30,(cradio**6)*30,(cradio**7)*30,(cradio**8)*30,(cradio**9)*30,(cradio**10)*30,(cradio**11)*30,(cradio**12)*30,(cradio**13)*30,(cradio**14)*30,(cradio**15)*30,(cradio**16)*30,(cradio**17)*30])
+   vector_suma_circulo = np.zeros((1, 18)) #vector para almacenar la suma de los bordes de cada circulo
+   vector_resta_circulos = np.zeros((1, 17)) #vector para almacenar la resta del circulo contenido
+   vector_areas=np.zeros((1, 18)) #vector que almacena las áreas de los círculos
+   vector_areas_resta = np.zeros((1, 17)) #vector para almacenar la resta de los círculos
+   vector_densidades = np.zeros((1, 17)) #vector para las densidades
+   vector_Densidades = np.zeros((1, 18)) #vector para las densidades con el primer circulo
+   cradio=1.32 #Constante para multiplicar el radio del circulo
+   radios = np.array([30, cradio*30, (cradio ** 2) * 30, (cradio ** 3) * 30, (cradio ** 4) * 30, (cradio ** 5) * 30,
+		     (cradio ** 6) * 30, (cradio ** 7) * 30, (cradio ** 8) * 30, (cradio ** 9) * 30,
+		     (cradio ** 10) * 30, (cradio ** 11) * 30, (cradio ** 12) * 30, (cradio ** 13) * 30,
+		     (cradio ** 14) * 30, (cradio ** 15) * 30, (cradio ** 16) * 30, (cradio ** 17) *30])
    filas,columnas=imagen.shape #se almacena en las variables el numero de filas y columnas
 
-   for b in range(0,18):
-         mascara = mascara_circular(filas,columnas,centro=[cx,cy],radio=radios[b]) #Función para aplicar la mascara circular
-         zona = (mascara*bordes) #Se aplica la máscara sobre la imagen de bordes
+   for b in range(0, 18):
+         mascara = mascara_circular(filas, columnas, centro=[cx ,cy], radio = radios[b]) #Función para aplicar la mascara circular
+         zona = (mascara * bordes) #Se aplica la máscara sobre la imagen de bordes
          binaria = np.zeros(zona.shape) #Crea una matriz del tamaño de la imagen
          imagennuevab = zona #se asigna a la variable la mascara circular y la imagen con los bordes
-         binaria[imagennuevab==0] = 0 #Si el valor en la variable zona es igual a False se asigna 0
-         binaria[imagennuevab==255] = 1 #Si el valor es 255 se asigna 1
-         vector_suma_circulo[:,b] = binaria.sum() #Se cuantan los 1 dentro del circulo
-         vector_areas[:,b] = math.pi*radios[b]**2 #Se calcula el área del circulo
-   for i in range(0,17):
-      vector_resta_circulos[:,i] = vector_suma_circulo[:,i+1]-vector_suma_circulo[:,i] #Se resta la suma del circulo continuo
-      vector_areas_resta[:,i] = vector_areas[0,i+1]-vector_areas[0,i]#Se resta el area del circulo continuo
-   primero = vector_suma_circulo[0,0]/vector_areas[0,0] #Se realiza la operacion de densidad para el primer circulo
-   vector_densidades = np.divide(vector_resta_circulos,vector_areas_resta)#Se obtiene las densidaes de los circulos
-   vector_Densidades = np.append(primero,vector_densidades) #Agrega la primera densidad al vector anterior
-   densidad_ord=np.sort(vector_Densidades)#Se ordenan los valores de las densidades de menor a mayor
-   densidad_maxima= np.max(vector_Densidades) #Localiza la densidad máxima
-   seg_max=densidad_ord[-2]#Se obtiene el valor de la segunda densidad máxima
-   prom_max=(densidad_maxima+seg_max)/2#Promedio de la primera y segunda densidades máximas
-   vector_densidades_normalizado = (vector_Densidades/prom_max).T #Normaliza de acuerdo al promedio de las densidades máximas
-   contador_indice= 0 #Contador para conocer el circulo evaluado
-   for j in range(0,len(vector_densidades_normalizado)):
+         binaria[imagennuevab == 0] = 0 #Si el valor en la variable zona es igual a False se asigna 0
+         binaria[imagennuevab == 255] = 1 #Si el valor es 255 se asigna 1
+         vector_suma_circulo[:, b] = binaria.sum() #Se cuantan los 1 dentro del circulo
+         vector_areas[:, b] = math.pi * radios[b] ** 2 #Se calcula el área del circulo
+   for i in range(0, 17):
+      vector_resta_circulos[:, i] = vector_suma_circulo[:,i + 1] - vector_suma_circulo[:, i] #Se resta la suma del circulo continuo
+      vector_areas_resta[:, i] = vector_areas[0, i + 1] - vector_areas[0, i] #Se resta el area del circulo continuo
+   primero = vector_suma_circulo[0, 0] / vector_areas[0, 0] #Se realiza la operacion de densidad para el primer circulo
+   vector_densidades = np.divide(vector_resta_circulos, vector_areas_resta) #Se obtiene las densidaes de los circulos
+   vector_Densidades = np.append(primero, vector_densidades) #Agrega la primera densidad al vector anterior
+   densidad_ord=np.sort(vector_Densidades) #Se ordenan los valores de las densidades de menor a mayor
+   densidad_maxima = np.max(vector_Densidades) #Localiza la densidad máxima
+   seg_max = densidad_ord[-2] #Se obtiene el valor de la segunda densidad máxima
+   prom_max = (densidad_maxima + seg_max) / 2 #Promedio de la primera y segunda densidades máximas
+   vector_densidades_normalizado = (vector_Densidades / prom_max).T #Normaliza de acuerdo al promedio de las densidades máximas
+   contador_indice = 0 #Contador para conocer el circulo evaluado
+   for j in range(0, len(vector_densidades_normalizado)):
       evaluacion = vector_densidades_normalizado[j] #Se recorre el vector de densidades normalizado
-      if evaluacion<0.2:#Umbral de 0.2 para obtener el circulo que contiene la mano
-         contador_indice=contador_indice#Se guarda el circulo en la variable contador_indice
+      if evaluacion < 0.2: #Umbral de 0.2 para obtener el circulo que contiene la mano
+         contador_indice = contador_indice #Se guarda el circulo en la variable contador_indice
          break #Se sale de la condición
       else:
-         contador_indice+=1 #Si no se cumple la condición se aumenta en 1 el contador_indice
+         contador_indice += 1 #Si no se cumple la condición se aumenta en 1 el contador_indice
    radio_final = radios[contador_indice] #De acuerdo al contador_indice se selecciona el radio final
-   mascara_final = mascara_circular(filas,columnas,centro=[cx,cy],radio=radio_final) #Se aplica la máscara de acuerdo al radio final
-   zona_final = (mascara_final*imagen) #Aplica la mascara a la imagen
+   mascara_final = mascara_circular(filas, columnas, centro = [cx, cy], radio = radio_final) #Se aplica la máscara de acuerdo al radio final
+   zona_final = (mascara_final * imagen) #Aplica la mascara a la imagen
 ######GRafica#######################
-   if grafica == 1:#Si en grafica se tiene un 1 se muestra
-      ejex= np.arange(0,18,1)#Vector de 19 unidades para el eje x
-      ejey=vector_densidades_normalizado#Vector donde se muestra las densidades y se toma como eje y
+   if grafica == 1: #Si en grafica se tiene un 1 se muestra
+      ejex= np.arange(0, 18, 1) #Vector de 19 unidades para el eje x
+      ejey = vector_densidades_normalizado #Vector donde se muestra las densidades y se toma como eje y
       plt.plot(ejex,ejey,'ro')#Se muestra la gráfica y cada valor en un punto rojo
       plt.xlim(0, 18)#Límite del eje x
       plt.grid(True)#Se muestra las lineas del plano
